@@ -31,9 +31,9 @@ public class UserService {
             // valid if user exist
             User user1 = userRepository.getUserByUsername(user.getUsername());
             if (user1 != null) {
-                return new Response.Builder()
-                        .setCode(HttpStatus.BAD_REQUEST.value())
-                        .setErrors(List.of("el usuario ya existe"))
+                return Response.builder()
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .errors(List.of("el usuario ya existe"))
                         .build();
             }
             // set the hash password
@@ -41,18 +41,18 @@ public class UserService {
             user.setPassword(passwordHashed);
             // set the creation date
             user.setCreateAt(Timestamp.now());
-            return new Response.Builder()
-                    .setCode(201)
-                    .setPayload(mapper.map(
+            return Response.builder()
+                    .code(201)
+                    .payload(mapper.map(
                             userRepository.createUser(user),
                             UserDTO.class)
                     )
                     .build();
         } catch (Exception e) {
             log.error("Error to create user: {}", e.getMessage());
-            return new Response.Builder()
-                    .setCode(500)
-                    .setErrors(List.of("error to create user"))
+            return Response.builder()
+                    .code(500)
+                    .errors(List.of("error to create user"))
                     .build();
         }
 
