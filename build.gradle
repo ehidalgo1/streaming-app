@@ -27,7 +27,9 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-crypto:6.2.4'
 	// model mapper
 	implementation 'org.modelmapper:modelmapper:2.4.2'
-	implementation 'com.google.firebase:firebase-admin:9.2.0'
+	implementation('com.google.firebase:firebase-admin:9.2.0') {
+		exclude module: 'commons-logging'
+	}
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
