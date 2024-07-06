@@ -48,4 +48,8 @@ public class MovieService {
                     .build();
         }
     }
+
+    public List<Movie> getMovies(int limit) {
+        return movieRepository.getMovies(limit);
+    }
 }

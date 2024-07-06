@@ -4,6 +4,7 @@ import com.eugenio.streamming.app.exception.FirestoreException;
 import com.eugenio.streamming.app.model.Movie;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Repository
 public class MovieRepository {
@@ -54,6 +56,20 @@ public class MovieRepository {
                             .toObject(Movie.class);
         } catch (Exception e) {
             log.error("Error get movie: {}", e.getMessage());
+            throw new FirestoreException(e);
+        }
+    }
+
+    public List<Movie> getMovies(int limit) {
+        try {
+            Query query = this.db.collection(MOVIES)
+                    .limit(limit);
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            return querySnapshot.get(TIMEOUT, TimeUnit.SECONDS)
+                    .getDocuments().stream().map(d -> d.toObject(Movie.class))
+                    .toList();
+        } catch (Exception e) {
+            log.error("Error en firestore: {}", e.getMessage());
             throw new FirestoreException(e);
         }
     }
